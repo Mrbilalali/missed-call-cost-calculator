@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Missed-Call Cost Calculator</title>
+    <meta property="og:title" content="Missed-Call Cost Calculator - Interactive Demo" />
+    <meta property="og:description" content="How much revenue are missed calls leaking from your business each month? Answer 3 questions and find your number in seconds. Interactive demo by Bilal Ali, AI Automation Expert." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://missed-call-cost-calculator-mr-bilal-alis-projects.vercel.app" />
+    <meta property="og:image" content="https://missed-call-cost-calculator-mr-bilal-alis-projects.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Missed-Call Cost Calculator - Interactive Demo" />
+    <meta name="twitter:description" content="How much revenue are missed calls leaking from your business each month? Answer 3 questions and find your number in seconds." />
+    <meta name="twitter:image" content="https://missed-call-cost-calculator-mr-bilal-alis-projects.vercel.app/og-image.png" />
+    <style>
+      :root {
+        --bg: #eef4ef;
+        --card: #ffffff;
+        --ink: #16302a;
+        --ink-soft: #3f5a52;
+        --ink-faint: #6b837b;
+        --accent: #0d6b4d;
+        --accent-dark: #08553d;
+        --accent-soft: #dcefe4;
+        --line: #d3e0d6;
+        --warn-bg: #fdf6e3;
+        --warn-line: #e8d9a8;
+        --warn-ink: #6b5510;
+        --shadow: 0 10px 30px rgba(13, 60, 45, 0.10);
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0c1713;
+          --card: #14231e;
+          --ink: #e6f0eb;
+          --ink-soft: #b9cfc4;
+          --ink-faint: #8ba69b;
+          --accent: #2fae7e;
+          --accent-dark: #2fae7e;
+          --accent-soft: #1c352c;
+          --line: #284139;
+          --warn-bg: #2c2712;
+          --warn-line: #574a1c;
+          --warn-ink: #e3cf8a;
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 28px 18px 56px;
+      }
+      /* ---------- Header ---------- */
+      .demo-tag {
+        display: inline-block;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        border: 1px solid var(--line);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border-radius: 999px;
+        margin: 0 0 18px;
+      }
+      h1 {
+        font-size: clamp(1.75rem, 6.5vw, 2.6rem);
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
+        font-weight: 800;
+      }
+      .lede {
+        font-size: 1.06rem;
+        color: var(--ink-soft);
+        margin: 0 0 6px;
+        max-width: 34em;
+      }
+      .byline {
+        margin: 0 0 22px;
+        font-size: 0.92rem;
+        color: var(--ink-faint);
+      }
+      .byline strong { color: var(--ink); }
+      .honesty {
+        background: var(--warn-bg);
+        border: 1px solid var(--warn-line);
+        color: var(--warn-ink);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        font-size: 0.9rem;
+        margin: 0 0 24px;
+      }
+      .honesty strong { font-weight: 700; }
+      /* ---------- Cards ---------- */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 22px 20px;
+        margin: 0 0 20px;
+      }
+      .card h2 {
+        font-size: 1.15rem;
+        margin: 0 0 4px;
+        font-weight: 750;
+      }
+      .card .sub {
+        margin: 0 0 18px;
+        color: var(--ink-faint);
+        font-size: 0.92rem;
+      }
+      /* ---------- Inputs ---------- */
+      .field { margin: 0 0 22px; }
+      .field:last-of-type { margin-bottom: 6px; }
+      .field-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .field label {
+        font-weight: 650;
+        font-size: 0.98rem;
+      }
+      .num-wrap {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        flex: none;
+      }
+      .num-wrap .prefix, .num-wrap .suffix {
+        color: var(--ink-faint);
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .num-wrap input[type="number"] {
+        width: 84px;
+        font: inherit;
+        font-weight: 700;
+        font-size: 1.05rem;
+        text-align: right;
+        color: var(--ink);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 10px;
+        min-height: 44px;
+      }
+      .num-wrap input[type="number"]:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+        border-color: transparent;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 44px;
+        background: transparent;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+      }
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--fill, 50%), var(--accent-soft) var(--fill, 50%), var(--accent-soft) 100%);
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 28px;
+        height: 28px;
+        margin-top: -10px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 3px solid var(--accent);
+        box-shadow: 0 2px 8px rgba(13, 60, 45, 0.25);
+      }
+      input[type="range"]::-moz-range-track {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+      }
+      input[type="range"]::-moz-range-progress {
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 3px solid var(--accent);
+        box-shadow: 0 2px 8px rgba(13, 60, 45, 0.25);
+      }
+      .scale {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--ink-faint);
+        margin-top: -4px;
+      }
+      /* ---------- Buttons ---------- */
+      .calc-btn {
+        display: block;
+        width: 100%;
+        font: inherit;
+        font-size: 1.08rem;
+        font-weight: 750;
+        color: #ffffff;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        min-height: 56px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      .calc-btn:hover { background: var(--accent-dark); }
+      .calc-btn:active { transform: translateY(1px); }
+      .calc-btn:focus-visible, .cta-btn:focus-visible, .reset-btn:focus-visible {
+        outline: 3px solid var(--accent-dark);
+        outline-offset: 2px;
+      }
+      .timer-line {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--ink-faint);
+        margin: 12px 0 0;
+        font-variant-numeric: tabular-nums;
+      }
+      /* ---------- Results ---------- */
+      #results { display: none; }
+      #results.show { display: block; }
+      .leak-card {
+        background: var(--accent);
+        color: #ffffff;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 26px 22px;
+        text-align: center;
+        margin: 0 0 16px;
+      }
+      .leak-card .kicker {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin: 0 0 6px;
+      }
+      .leak-card .big {
+        font-size: clamp(2.4rem, 11vw, 3.4rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+      }
+      .leak-card .per {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin: 4px 0 0;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 0 0 16px;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+      }
+      .stat .v {
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        margin: 0 0 2px;
+      }
+      .stat .k {
+        font-size: 0.85rem;
+        color: var(--ink-faint);
+        margin: 0;
+      }
+      .stat.wide { grid-column: 1 / -1; }
+      @media (max-width: 380px) {
+        .stats { grid-template-columns: 1fr; }
+        .stat.wide { grid-column: auto; }
+      }
+      .recovery {
+        background: var(--accent-soft);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        margin: 0 0 16px;
+      }
+      .recovery .v {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--accent-dark);
+        margin: 0 0 4px;
+        font-variant-numeric: tabular-nums;
+      }
+      .recovery p { margin: 0 0 8px; }
+      .recovery .note {
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+        margin: 0;
+      }
+      .cta-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1.08rem;
+        font-weight: 750;
+        color: #ffffff;
+        background: var(--accent);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        min-height: 56px;
+        box-shadow: var(--shadow);
+      }
+      .cta-btn:hover { background: var(--accent-dark); }
+      .cta-sub {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--ink-faint);
+        margin: 10px 0 0;
+      }
+      .result-timer {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--ink-faint);
+        margin: 14px 0 0;
+        font-variant-numeric: tabular-nums;
+      }
+      .reset-btn {
+        display: block;
+        width: 100%;
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 650;
+        color: var(--accent-dark);
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px 20px;
+        min-height: 48px;
+        cursor: pointer;
+        margin-top: 14px;
+      }
+      .reset-btn:hover { background: var(--card); }
+      /* ---------- How it works ---------- */
+      .how {
+        font-size: 0.92rem;
+        color: var(--ink-soft);
+      }
+      .how h2 { color: var(--ink); }
+      .how code {
+        background: var(--accent-soft);
+        padding: 1px 6px;
+        border-radius: 6px;
+        font-size: 0.88em;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      footer {
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--ink-faint);
+        margin-top: 8px;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        #results.show { animation: rise 0.35s ease-out; }
+        @keyframes rise {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: none; }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="demo-tag">Interactive demo — scripted simulation</p>
+      <h1>AI voice agents that answer every lead in 60 seconds</h1>
+      <p class="lede">Every call your business misses is a customer who probably called the next name on the list. Move the sliders, tap calculate, and see roughly what those missed calls are worth.</p>
+      <p class="byline">Built by <strong>Bilal Ali</strong>, AI Automation Expert — for US small businesses and agencies.</p>
+
+      <p class="honesty"><strong>Straight up:</strong> this is a scripted simulation. No real calls are placed and no real data is collected — nothing you type here leaves this page. Every figure below is an illustrative estimate calculated from your own inputs, not a client result and not a guarantee.</p>
+
+      <section class="card" aria-labelledby="calc-heading">
+        <h2 id="calc-heading">Your numbers</h2>
+        <p class="sub">Defaults are pre-filled — adjust them or just tap calculate.</p>
+
+        <div class="field">
+          <div class="field-head">
+            <label for="calls-num">Inbound calls per week</label>
+            <span class="num-wrap">
+              <input type="number" id="calls-num" min="1" max="500" step="1" value="40" inputmode="numeric" aria-label="Inbound calls per week, number" />
+            </span>
+          </div>
+          <input type="range" id="calls-range" min="1" max="500" step="1" value="40" aria-label="Inbound calls per week, slider" />
+          <div class="scale"><span>1</span><span>500</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-head">
+            <label for="missed-num">Calls you miss</label>
+            <span class="num-wrap">
+              <input type="number" id="missed-num" min="0" max="100" step="1" value="30" inputmode="numeric" aria-label="Percentage of calls missed, number" />
+              <span class="suffix">%</span>
+            </span>
+          </div>
+          <input type="range" id="missed-range" min="0" max="100" step="1" value="30" aria-label="Percentage of calls missed, slider" />
+          <div class="scale"><span>0%</span><span>100%</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-head">
+            <label for="value-num">Average job / customer value</label>
+            <span class="num-wrap">
+              <span class="prefix">$</span>
+              <input type="number" id="value-num" min="0" max="10000" step="10" value="250" inputmode="numeric" aria-label="Average job value in dollars, number" />
+            </span>
+          </div>
+          <input type="range" id="value-range" min="0" max="10000" step="10" value="250" aria-label="Average job value in dollars, slider" />
+          <div class="scale"><span>$0</span><span>$10,000</span></div>
+        </div>
+
+        <button type="button" class="calc-btn" id="calc-btn">Calculate what missed calls cost me</button>
+        <p class="timer-line" id="timer-line">Time on this page: <span id="timer">0.0</span>s</p>
+      </section>
+
+      <section id="results" aria-live="polite" aria-label="Your results">
+        <div class="leak-card">
+          <p class="kicker">Revenue leaking every month</p>
+          <p class="big" id="leak-month">$0</p>
+          <p class="per">per month, based on the numbers you entered</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <p class="v" id="missed-month">0</p>
+            <p class="k">Missed calls per month</p>
+          </div>
+          <div class="stat">
+            <p class="v" id="leak-year">$0</p>
+            <p class="k">Revenue leaking per year</p>
+          </div>
+        </div>
+
+        <div class="recovery">
+          <p class="v" id="recovered">+$0 / month</p>
+          <p>If an AI receptionist answered <strong>9 out of 10</strong> of those missed calls, this is the revenue it could put back on the table each month.</p>
+          <p class="note">Illustrative estimate only — calculated from your own inputs above. It is not a guarantee and not a real client result.</p>
+        </div>
+
+        <a class="cta-btn" href="https://cal.com/mrbilalali/discovery-call" target="_blank" rel="noopener">Book a free discovery call — see what an AI receptionist would recover for your business</a>
+        <p class="cta-sub">Free, no obligation. We walk through your real call numbers together.</p>
+
+        <p class="result-timer" id="result-timer"></p>
+        <button type="button" class="reset-btn" id="reset-btn">Start over</button>
+      </section>
+
+      <section class="card how" aria-labelledby="how-heading">
+        <h2 id="how-heading">How this works</h2>
+        <p>The math is simple and shown in full: <code>missed calls per month = calls per week × % missed × 52 ÷ 12</code>, and the monthly leak is that number times your average job value. The recovery figure assumes 9 out of 10 missed calls get answered — change the inputs and every number updates.</p>
+      </section>
+
+      <footer>
+        <p>Interactive demo by Bilal Ali, AI Automation Expert. All figures are illustrative estimates from your own inputs.</p>
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        var startTime = Date.now();
+        var timerEl = document.getElementById('timer');
+        var resultShownAt = null;
+        var timerId = null;
+
+        function tick() {
+          var elapsed = (Date.now() - startTime) / 1000;
+          timerEl.textContent = elapsed.toFixed(1);
+        }
+        tick();
+        timerId = setInterval(tick, 100);
+
+        var pairs = [
+          { range: document.getElementById('calls-range'), num: document.getElementById('calls-num'), min: 1, max: 500 },
+          { range: document.getElementById('missed-range'), num: document.getElementById('missed-num'), min: 0, max: 100 },
+          { range: document.getElementById('value-range'), num: document.getElementById('value-num'), min: 0, max: 10000 }
+        ];
+
+        function clamp(v, min, max) {
+          if (isNaN(v)) return min;
+          return Math.max(min, Math.min(max, v));
+        }
+        function paintFill(range) {
+          var pct = ((range.value - range.min) / (range.max - range.min)) * 100;
+          range.style.setProperty('--fill', pct + '%');
+        }
+        pairs.forEach(function (p) {
+          paintFill(p.range);
+          p.range.addEventListener('input', function () {
+            p.num.value = p.range.value;
+            paintFill(p.range);
+          });
+          p.num.addEventListener('input', function () {
+            var v = clamp(parseFloat(p.num.value), p.min, p.max);
+            p.range.value = v;
+            paintFill(p.range);
+          });
+          p.num.addEventListener('change', function () {
+            p.num.value = clamp(parseFloat(p.num.value), p.min, p.max);
+            p.range.value = p.num.value;
+            paintFill(p.range);
+          });
+        });
+
+        var money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+        var count = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+
+        var results = document.getElementById('results');
+        var resultTimer = document.getElementById('result-timer');
+
+        document.getElementById('calc-btn').addEventListener('click', function () {
+          var callsWeek = clamp(parseFloat(pairs[0].num.value), 1, 500);
+          var missedPct = clamp(parseFloat(pairs[1].num.value), 0, 100);
+          var jobValue = clamp(parseFloat(pairs[2].num.value), 0, 10000);
+
+          var missedMonth = callsWeek * (missedPct / 100) * 52 / 12;
+          var leakMonth = missedMonth * jobValue;
+          var leakYear = leakMonth * 12;
+          var recovered = leakMonth * 0.9;
+
+          document.getElementById('missed-month').textContent = count.format(Math.round(missedMonth));
+          document.getElementById('leak-month').textContent = money.format(Math.round(leakMonth));
+          document.getElementById('leak-year').textContent = money.format(Math.round(leakYear));
+          document.getElementById('recovered').textContent = '+' + money.format(Math.round(recovered)) + ' / month';
+
+          results.classList.add('show');
+
+          if (resultShownAt === null) {
+            resultShownAt = (Date.now() - startTime) / 1000;
+            clearInterval(timerId);
+            timerEl.textContent = resultShownAt.toFixed(1);
+            document.getElementById('timer-line').textContent = 'Result shown in ' + resultShownAt.toFixed(1) + ' seconds from page load.';
+            resultTimer.textContent = 'You went from page load to your number in ' + resultShownAt.toFixed(1) + ' seconds — well inside the 60-second answer window an AI receptionist works to.';
+          }
+
+          results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', function () {
+          var defaults = [40, 30, 250];
+          pairs.forEach(function (p, i) {
+            p.range.value = defaults[i];
+            p.num.value = defaults[i];
+            paintFill(p.range);
+          });
+          results.classList.remove('show');
+          resultShownAt = null;
+          startTime = Date.now();
+          tick();
+          timerId = setInterval(tick, 100);
+          document.getElementById('timer-line').innerHTML = 'Time on this page: <span id="timer">' + timerEl.textContent + '</span>s';
+          timerEl = document.getElementById('timer');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      })();
+    </script>
+  </body>
+</html>
